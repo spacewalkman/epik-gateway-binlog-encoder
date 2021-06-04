@@ -13,7 +13,7 @@ case class Tag(name: String, properties: List[Property]) {
 
   lazy val nameUtf8Bytes = name.getBytes("UTF-8")
 
-  lazy val totalLength: Int = 4 /*name size*/ + nameUtf8Bytes.size + 4 /*type size*/ + properties
+  lazy val totalLength: Int = 4 /*name size*/ + nameUtf8Bytes.size + 4 /*properties size*/ + properties
     .foldLeft(0)(_ + _.totalLength)
 
   val getBytes: ByteBuffer = {

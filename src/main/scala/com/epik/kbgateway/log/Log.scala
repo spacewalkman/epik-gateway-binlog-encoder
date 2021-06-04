@@ -383,9 +383,6 @@ case class DataVertexLog(graphDbName: String,
                          crudMode: CrudMode = CrudMode.ADD)
     extends Log {
   require(graphDbName.nonEmpty)
-  //TODO:ava.lang.IllegalArgumentException: requirement failed
-  //	at scala.Predef$.require(Predef.scala:268)
-  //	at com.epik.kbgateway.log.DataVertexLog.(Log.scala:372)
   require(vertexBizId.nonEmpty)
   require(tags.nonEmpty)
 
