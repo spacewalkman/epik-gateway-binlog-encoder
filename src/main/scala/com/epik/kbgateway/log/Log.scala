@@ -2,10 +2,17 @@ package com.epik.kbgateway.log
 
 import java.nio.{ByteBuffer, ByteOrder}
 
+import com.epik.kbgateway.log.CrudMode.CrudMode
+import com.epik.kbgateway.log.DbTagEdgeMode.DbTagEdgeMode
+import com.epik.kbgateway.log.SchemaDataMode.SchemaDataMode
+import com.epik.kbgateway.log.VidGeneratorType.VidGeneratorType
+
 /**
   * Log header: bitmap mode
   */
 object SchemaDataMode extends Enumeration {
+  type SchemaDataMode = Value
+
   val SCHEMA = Value(0x00.toByte)
   val DATA   = Value(0x01.toByte)
 }
@@ -14,6 +21,8 @@ object SchemaDataMode extends Enumeration {
   * Graphdb/Tag/Edge
   */
 object DbTagEdgeMode extends Enumeration {
+  type DbTagEdgeMode = Value
+
   val GRAPHDB = Value(0x01.toByte)
   val TAG     = Value(0x02.toByte)
   val EDGE    = Value(0x03.toByte)
@@ -23,14 +32,16 @@ object DbTagEdgeMode extends Enumeration {
   * CRUD mode, exclude Read(R)
   */
 object CrudMode extends Enumeration {
+  type CrudMode = Value
+
   val ADD    = Value(0x01)
   val UPDATE = Value(0x02)
   val DELETE = Value(0x03)
 }
 
-case class BitMode(schemaDataMode: SchemaDataMode.Value,
-                   dbTagEdgeMode: DbTagEdgeMode.Value,
-                   crudMode: CrudMode.Value = CrudMode.ADD) {
+case class BitMode(schemaDataMode: SchemaDataMode,
+                   dbTagEdgeMode: DbTagEdgeMode,
+                   crudMode: CrudMode = CrudMode.ADD) {
   val getByte: Byte =
     (schemaDataMode.id.toByte << 4 | dbTagEdgeMode.id.toByte << 2 | crudMode.id.toByte).toByte
   override def toString: String = getByte.toString
@@ -67,6 +78,8 @@ sealed abstract class Log {
   * Property Type,  Currently only support 4 types: Integer、Double、String、Timestamp
   */
 object PropertyType extends Enumeration {
+  type PropertyType = Value
+
   val INTEGER   = Value("int")
   val DOUBLE    = Value("double")
   val STRING    = Value("string")
@@ -130,8 +143,8 @@ object Log {
 case class SchemaGraphDbLog(graphDbName: String,
                             partition: Int,
                             replicas: Short,
-                            vidGeneratorType: VidGeneratorType.Value = VidGeneratorType.HASH,
-                            crudMode: CrudMode.Value = CrudMode.ADD)
+                            vidGeneratorType: VidGeneratorType = VidGeneratorType.HASH,
+                            crudMode: CrudMode = CrudMode.ADD)
     extends Log {
   require(graphDbName.nonEmpty)
   require(partition > 0)
@@ -197,7 +210,7 @@ object SchemaGraphDbLog {
 case class SchemaTagLog(graphDbName: String,
                         tagName: String,
                         properties: List[Property],
-                        crudMode: CrudMode.Value = CrudMode.ADD)
+                        crudMode: CrudMode = CrudMode.ADD)
     extends Log {
   require(graphDbName.nonEmpty)
   require(tagName.nonEmpty)
@@ -275,7 +288,7 @@ object SchemaTagLog {
 case class SchemaEdgeLog(graphDbName: String,
                          edgeName: String,
                          properties: List[Property],
-                         crudMode: CrudMode.Value = CrudMode.ADD)
+                         crudMode: CrudMode = CrudMode.ADD)
     extends Log {
   require(graphDbName.nonEmpty)
   require(edgeName.nonEmpty)
@@ -342,6 +355,7 @@ object SchemaEdgeLog {
   * Vertex ID geneator type.
   */
 object VidGeneratorType extends Enumeration {
+  type VidGeneratorType = Value
 
   /**
     * Hash, corresponding to vid_type = INT64, Currently is the only supported vid generator,
@@ -365,8 +379,8 @@ object VidGeneratorType extends Enumeration {
 case class DataVertexLog(graphDbName: String,
                          vertexBizId: String,
                          tags: List[Tag],
-                         vidGenerator: VidGeneratorType.Value = VidGeneratorType.HASH,
-                         crudMode: CrudMode.Value = CrudMode.ADD)
+                         vidGenerator: VidGeneratorType = VidGeneratorType.HASH,
+                         crudMode: CrudMode = CrudMode.ADD)
     extends Log {
   require(graphDbName.nonEmpty)
   //TODO:ava.lang.IllegalArgumentException: requirement failed
@@ -443,8 +457,8 @@ case class DataEdgeLog(graphDbName: String,
                        fromVertexBizId: String,
                        toVertexBizId: String,
                        properties: List[Property],
-                       vidGenerator: VidGeneratorType.Value = VidGeneratorType.HASH,
-                       crudMode: CrudMode.Value = CrudMode.ADD)
+                       vidGenerator: VidGeneratorType = VidGeneratorType.HASH,
+                       crudMode: CrudMode = CrudMode.ADD)
     extends Log {
   require(graphDbName.nonEmpty)
   require(edgeName.nonEmpty)

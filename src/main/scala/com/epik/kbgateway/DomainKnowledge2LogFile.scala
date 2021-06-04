@@ -1,6 +1,7 @@
 package com.epik.kbgateway
 
 import com.epik.kbgateway.log.NebulaGraphSchema.{DefaultPropertyName, DefaultVertexTagName}
+import com.epik.kbgateway.log.VidGeneratorType.VidGeneratorType
 import com.epik.kbgateway.log._
 import org.apache.commons.cli.{
   CommandLine,
@@ -142,7 +143,7 @@ object DomainKnowledge2LogFile {
     }
 
     val vidGeneratorStr: String = cmd.getOptionValue("v")
-    val vidGenerator: VidGeneratorType.Value = if (vidGeneratorStr == null) {
+    val vidGenerator: VidGeneratorType = if (vidGeneratorStr == null) {
       VidGeneratorType.HASH
     } else {
       if (vidGeneratorStr.compareToIgnoreCase("hash") == 0) {

@@ -3,6 +3,8 @@ package com.epik.kbgateway.log
 import java.nio.{ByteBuffer, ByteOrder}
 import java.sql.Timestamp
 
+import com.epik.kbgateway.log.PropertyType.PropertyType
+
 /**
   * Property, could be bind to a Vertex or an Edge.
   *
@@ -10,7 +12,7 @@ import java.sql.Timestamp
   * @param `type`          property's type, but must be among supported types.
   * @param defaultValueOpt default value Or actual value. nullable.
   */
-case class Property(name: String, `type`: PropertyType.Value, defaultValueOpt: Option[Any]) {
+case class Property(name: String, `type`: PropertyType, defaultValueOpt: Option[Any]) {
   require(name.nonEmpty, "Property name can't be empty")
 
   lazy val nameUtf8Bytes = name.getBytes("UTF-8")

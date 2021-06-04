@@ -1,5 +1,8 @@
 package com.epik.kbgateway
 
+import com.epik.kbgateway.log.CrudMode.CrudMode
+import com.epik.kbgateway.log.DbTagEdgeMode.DbTagEdgeMode
+import com.epik.kbgateway.log.SchemaDataMode.SchemaDataMode
 import com.epik.kbgateway.log.{CrudMode, DbTagEdgeMode, SchemaDataMode, _}
 import org.scalatest.Matchers._
 import org.scalatest.{BeforeAndAfter, FlatSpec}
@@ -8,8 +11,8 @@ import scala.collection.SortedSet
 
 class BitModeTest extends FlatSpec with BeforeAndAfter {
 
-  "All kind of BitMode Type" should "be serialize/deserialized" in {
-    val combination: SortedSet[((SchemaDataMode.Value, DbTagEdgeMode.Value), CrudMode.Value)] =
+  "All kind of BitMode Type" should "be serialized/deserialized" in {
+    val combination: SortedSet[((SchemaDataMode, DbTagEdgeMode), CrudMode)] =
       SchemaDataMode.values.zip(DbTagEdgeMode.values).zip(CrudMode.values)
 
     combination.map {
